@@ -36,7 +36,7 @@ class DaemonRPC:
     def on_get_block_hash(self, height):
         res = self.send_request('on_get_block_hash', [height])
         if res is None: return
-        # print(res.text[1:-1].split(',')[-1][4:-2])
+        print(res.text[1:-1].split(',')[-1][4:-2])
         return res.text[1:-1].split(',')[-1][4:-2]
 
     def get_block_template(self, wallet_address, reserve_size):
