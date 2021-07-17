@@ -131,13 +131,61 @@ class DaemonRPC:
         return res.text
 
 
+class WalletRPC:
+    def __init__(self, ip='127.0.0.1', port='19746'):
+        self.IP = ip
+        self.PORT = port
+        self.URL = 'http://' + self.IP + ':' + self.PORT + '/json_rpc'
+        self.header = {'Content-Type': 'application/json'}
+
+    def send_request(self, method=None, param=None):
+        data = {'jsonprc': '2.0', 'id': '0', 'method': method}
+        if param is not None:
+            data['params'] = param
+
+        try:
+            res = requests.post(self.URL, data=json.dumps(data), headers=self.header)
+            return res
+        except Exception as ex:
+            print('ERROR : ', type(ex))
+            print("Check Server Connection")
+
+    def create_wallet(self, wallet_name, password):
+        param = {'filename': wallet_name, 'password': password, 'language': 'English'}
+        res = self.send_request('create_wallet', param)
+        if res is None: return
+
+    def open_wallet(self, wallet_file, password):
+        param = {'filename': wallet_file, 'password': password}
+        res = self.send_request('open_wallet', param)
+        if res is None: return
+
+    def get_transfers(self, mode):
+        param = {mode: True}
+        res = self.send_request('get_transfers', param)
+        if res is None: return
+        print(res.text)
+
+    def get_accounts(self):
+        res = self.send_request('get_accounts')
+        if res is None: return
+        print(res.text)
+
+    def transfer(self, wallet_address, amount):
+        data = {'destinations': [{'amount': amount, 'address': wallet_address}]}
+        res = self.send_request('transfer', data)
+        if res is None: return
+        print(res.text)
+
+
 def main():
-    DPRC = DaemonRPC()
-    # DPRC.print_version()
-    # DPRC.get_block_cound()
-    DPRC.on_get_block_hash('1719714')
-    DPRC.get_last_block_header()
+    wallet = WalletRPC()
+    wallet.open_wallet('wallet_4', 'Pouyan')
+    # wallet.get_transfers('in')
+    wallet.get_accounts()
+    # wallet.transfer('Shad379LPu3ASYBM14wsGuXNQP32N9HMXF4mhV234sZmA3FeGh79kgw', 1000000000)
 
 
+#
 if __name__ == '__main__':
     main()
