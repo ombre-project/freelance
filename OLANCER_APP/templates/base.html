@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'include/head.html' %}
+<body>
+    {% include 'include/header.html' %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="footer">
+        {% for i , item in footer_list %}
+            {% if (i%3) == 0 %}
+            <div class="footer_sub">
+                <h3 class="inner_footer_sub_h3 margin_f_title">{{item}}</h3>
+                {% else %}
+                <h3 class="inner_footer_sub_h3">{{item}}</h3>
+                {% endif %}
+                {% if ((i+4)%3) == 0  %}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    </footer>
+</body>
+    {% if title == 'Home'%}
+    <script type="text/javascript" src="/../static/js/home.js" ></script>
+    {% elif title == 'Signup' %}
+    <script type="text/javascript" src="/../static/js/signup.js" ></script>
+    {% elif title == 'Login' %}
+    <script type="text/javascript" src="/../static/js/login.js" ></script>
+    {% elif title == 'Profile' %}
+    <script type="text/javascript" src="/../static/js/profile.js" ></script>
+    {% endif %}
+</html>

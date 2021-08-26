@@ -1,0 +1,20 @@
+{% extends 'base_loged_in.html' %}
+{% block content %}
+<section>
+    <main>
+        <section class="sec_signup">
+            <div class="contain">
+                <form id="form_upload" action="/api/v1/users/{{USER_ID}}/project-upload/{{PROJ_ID}}" method="post" class="form_signup proj-form" enctype="multipart/form-data">
+                    <h1 class="title_signup">{{title}}</h1>
+                    <div class="boxing">
+                        <div class="box">
+                            <input id="upload" type="file" name="file" placeholder="{{upload_project}}" class="" multiple>
+                        </div>
+                    </div>
+                    <input type="submit" name="submit" class="input_signup_submit" value="{{submit}}">
+                </form>
+            </div>
+        </section>
+    </main>
+</section>
+{% endblock %}

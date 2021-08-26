@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <main>
+        <section class="sec_signup">
+            <div class="contain">
+                <form action="/api/v1/users/open" method="post" class="form_signup">
+                    <h1 class="title_signup">{{title}}</h1>
+                    <div class="boxing">
+                        <div class="box">
+                            <h2 class="title_signup">{{input_list[0]}}</h2>
+                            <label for="username" class="label_signup">{{input_list[1]}}</label>
+                            <input id="username"  name="username" type="text" placeholder="{{input_list[1]}}" class="input_signup">
+                            <label for="email" class="label_signup">{{input_list[2]}}</label>
+                            <input id="email" placeholder="{{input_list[2]}}" name="email" type="email" class="input_signup">
+                            <label for="password" class="label_signup">{{input_list[3]}}</label>
+                            <input id="password" name="password" placeholder="{{input_list[3]}}" type="password" class="input_signup">
+                            <label for="re_password" class="label_signup">{{input_list[4]}}</label>
+                            <input id="re_password" type="password" name="re_password"  placeholder="{{input_list[4]}}" class="input_signup">
+                        </div>
+                        <div class="box">
+
+                        </div>
+                    </div>
+                    <input type="submit" name="submit" class="input_signup_submit" value="{{input_list[7]}}">
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock %}

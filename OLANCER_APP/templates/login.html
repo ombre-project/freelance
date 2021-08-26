@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    <main>
+        <section class="sec_signup">
+            <div class="contain">
+                <form id="form_login" action="/api/v1/login/access-token" method="post" class="form_signup">
+                    <h1 class="title_signup">{{title}}</h1>
+                    <div class="boxing">
+                        <div class="box">
+                            <h2 class="title_signup">{{input_list[0]}}</h2>
+                            <label for="email" class="label_signup">{{input_list[1]}}</label>
+                            <input id="email" type="email" name="username" placeholder="{{input_list[1]}}" class="input_signup">
+                            <label for="password" class="label_signup">{{input_list[2]}}</label>
+                            <input id="password" type="password" name="password" placeholder="{{input_list[2]}}" class="input_signup">
+                        </div>
+                    </div>
+                    <input type="submit" name="submit" class="input_signup_submit" value="{{input_list[3]}}">
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -1,0 +1,154 @@
+{
+  "en": {
+    "PROJECT_NAME": "FL_OMBRE_PAY",
+    "SERVER_NAME": "AMIN",
+    "SERVER_HOST": "http://google.com",
+    "SENTRY_DNS": "",
+    "POSTGRES_SERVER": "localhost",
+    "POSTGRES_USER": "ombre",
+    "POSTGRES_PASSWORD": "ombre123",
+    "POSTGRES_DB": "ombre",
+    "POSTGRES_URI":"postgresql://ombre:ombre123@localhost/ombre",
+    "SIGNIN_URL": "/api/v1/login",
+    "HOME_URL": "/api/v1/home",
+    "SIGNUP_URL": "/api/v1/users/signup",
+    "API_PREV_URL": "/api/v1/",
+    "OMBRE": {
+
+      "IP": "95.156.252.183",
+      "PORT": 19746,
+      "WALLET_ADDRESS": "Wallet Address : ",
+      "BALANCE": "Balance : ",
+      "TITLE": "Ombre-Wallet",
+      "REC_ADDR": "Receiver address wallet : ",
+      "ENTER_REC_ADDR":"Enter the address ..." ,
+      "AMOUNT": "The amount you want to send : ",
+      "ENTER_AMOUNT": "Enter the amount ..."
+    },
+    "SIGNUP": {
+      "TITLE":"Signup",
+      "INPUT_LIST": [
+        "Billing Info",
+        "username",
+        "email",
+        "password",
+        "re_password",
+        "Credit Wallet",
+        "wallet_address",
+        "signup"
+      ]
+    },
+    "LOGIN": {
+      "TITLE":"Login",
+      "INPUT_LIST": [
+        "Sign in",
+        "email",
+        "password",
+        "submit"
+      ]
+    },
+    "HOME_PAGE": {
+      "NAVIGATION_BAR": [
+        "LOGIN",
+        "SIGN UP",
+        "Home",
+        "About us",
+        "Privacy",
+        "OLANCER"
+      ],
+      "TITLE": "Home",
+      "IMAGES": [
+        "/../static/image/freelance-1024x512.png",
+        "/../static/image/become-freelancer-types-work-1068x713.jpg",
+        "/../static/image/omb-1.jpg"
+      ],
+      "FOOTER": [
+        "START A PROJECT",
+        "We are ready for the challenge",
+        "amin76ahz@gmail.com",
+        "SAY HELLO",
+        "Ev. Isfahan city st. tavon3",
+        "+989331109442",
+        "JOBS",
+        "We are always looking for new talent",
+        "amin76ahz@gmail.com"
+      ],
+      "DESCRIPTIONS": [
+        "Olancer",
+        "Free Lancing",
+        "in ",
+        "Ombre ",
+        "World...",
+        "Lorem ipsum dolor  obcaecati.",
+        "Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationeLorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!r adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium prm labore nisi praesentium provident quidem temporibus, voluptatum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!",
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, alias alLorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum! voluptatum! um provident quidem temporibus, voluptatum! voluptatum! ",
+        "onsectetur adipisicing elit. A, alias"
+      ],
+      "IMAGES_COMMENT":[
+        "/../static/image/Marie_Curie_Tekniska_museet.jpg",
+        "/../static/image/martin-luther-king-jr-gettyimages-517481130.jpg",
+        "/../static/image/elon-musk.jpg"
+      ],
+      "NAMES_COMMENT": [
+        "ELON MUSK",
+        "ELON ALKOL",
+        "ELAN DASTKESH"
+      ],
+      "DESCRIPTIONS_COMMENT":[
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!",
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!",
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequuntur deserunt dolorem exercitationem labore nisi praesentium provident quidem temporibus, voluptatum!"
+      ]
+    },
+    "PROFILE": {
+      "TITLE": "Profile",
+      "FNAME": "name : ",
+      "LNAME": "lastname : ",
+      "BURN":"burn : ",
+      "RESUME":"resume : ",
+      "WALLETADDRESS":"wallet address : ",
+      "BIO":"bio : ",
+      "ADDRESS": "address : ",
+      "CITY":"city : ",
+      "COUNTRY": "country : ",
+      "IMGADDRESS": "/../static/image/account_circle_black_48dp.svg",
+      "FINAL_PROJECT_DEVELOPED": "Projects You Developed",
+      "PROJECTS_ARE_DEVELOPING": "Projects You Are Developing",
+      "PROJECT_DEFINED": "Projects You Define",
+      "FINAL_PROJECT_DEFINED": "Projects You Define And Other Accounts Developed it",
+      "NAME": "name : ",
+      "START_DATE": "start date : ",
+      "END_DATE": "deliver date : ",
+      "DESCRIBE": "description : ",
+      "COST": "cost : "
+    },
+    "PROJECT":{
+      "TITLE": "Project",
+      "TABSHEADERS": [
+        "Funder",
+        "Lancer"
+      ],
+      "NAME_LANCER": "name of the project :",
+      "DESCRIPTION_LANCER": "describe your project :",
+      "DATE_FINISH_LANCER": "dead line of project :",
+      "FILE_LANCER": "upload project file :",
+      "IMG_LANCER": "upload an image :",
+      "COST_LANCER": "cost of your project :",
+      "NAME": "Name : ",
+      "EDATE": "Deadline : ",
+      "COST": "Cost : "
+    },
+    "UPLOAD": {
+      "TITLE": "Upload-Project",
+      "UPLOAD_PROJECT": "Upload Project",
+      "SUBMIT": "Submit"
+    },
+    "PRESENT_PROJECT": {
+      "TITLE": "Present-page",
+      "SUBMIT": "Submit",
+      "COMMON": "Enter your common about thi project after download and check it ...",
+      "DOWNLOAD": "Download"
+    }
+  },
+  "fa": {}
+}

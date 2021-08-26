@@ -1,0 +1,77 @@
+{% extends 'base_loged_in.html' %}
+{% block content %}
+<section>
+    <main>
+        <section class="sec_signup">
+            <div class="contain">
+                <form id="form_finish" action="/api/v1/users/{{USER_ID}}/project-finish/{{PROJ_ID}}" method="post" class="form_signup rating-form" >
+                    <h1 class="title_signup">{{title}}</h1>
+                    <div class="boxing" style="width:80rem;">
+                        <div class="box" style="width:60rem;">
+                            <a href="{{url_download_proj}}" class="btn-prof a-tag-btn" style="margin-left:0rem; width:100%;" download>{{download}}</a>
+                            <input id="common_des" style="height:30rem; margin:0rem;" type="text" name="common_des" placeholder="{{common_desc}}" class="wid">
+<!--                            here-->
+                              <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+                              <fieldset class="form-group" style="align-self:center; margin:2rem;">
+                                <legend class="form-legend">Rating:</legend>
+                                <div class="form-item">
+                                  <input id="rating-5" name="common" type="radio" value="5" />
+                                  <label for="rating-5" data-value="5">
+                                    <span class="rating-star">
+                                      <i class="fa fa-star-o"></i>
+                                      <i class="fa fa-star"></i>
+                                    </span>
+                                    <span class="ir">5</span>
+                                  </label>
+                                  <input id="rating-4" name="common" type="radio" value="4" />
+                                  <label for="rating-4" data-value="4">
+                                    <span class="rating-star">
+                                      <i class="fa fa-star-o"></i>
+                                      <i class="fa fa-star"></i>
+                                    </span>
+                                    <span class="ir">4</span>
+                                  </label>
+                                  <input id="rating-3" name="common" type="radio" value="3" />
+                                  <label for="rating-3" data-value="3">
+                                    <span class="rating-star">
+                                      <i class="fa fa-star-o"></i>
+                                      <i class="fa fa-star"></i>
+                                    </span>
+                                    <span class="ir">3</span>
+                                  </label>
+                                  <input id="rating-2" name="common" type="radio" value="2" />
+                                  <label for="rating-2" data-value="2">
+                                    <span class="rating-star">
+                                      <i class="fa fa-star-o"></i>
+                                      <i class="fa fa-star"></i>
+                                    </span>
+                                    <span class="ir">2</span>
+                                  </label>
+                                  <input id="rating-1" name="common" type="radio" value="1" />
+                                  <label for="rating-1" data-value="1">
+                                    <span class="rating-star">
+                                      <i class="fa fa-star-o"></i>
+                                      <i class="fa fa-star"></i>
+                                    </span>
+                                    <span class="ir">1</span>
+                                  </label>
+                                </div>
+
+                              </fieldset>
+
+<!--                            to here-->
+                            <input type="submit" name="submit" style="margin-top:3rem;margin-left:0rem;" class="input_signup_submit wid" value="{{submit}}">
+                    </div>
+
+                </form>
+            </div>
+        </section>
+    </main>
+</section>
+
+
+
+
+
+
+{% endblock %}
