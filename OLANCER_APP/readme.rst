@@ -19,15 +19,27 @@ notice : (password : ombre123)
 
 postgres@server$ createdb ombre
 
-postgres@server$ psql -U ombre
+Do one of the followings
+---------------------------
+1
+^^^^
+postgres@server$ psql --username ombre --host 127.0.0.1 --db ombre --password
 
-ombre=> \i /home/your_path_to_project/source.sql
+ombre=> \i /your_path_to_project/source.sql
+
+or 
+
+2
+^^^
+psql --username ombre --host 127.0.0.1 --db ombre --password -f /your_path_to_project/source.sql
 
 second step
 =================
 notice : make sure your system has virtualenv or install it
 
-notice : we require python eg 3.7
+$ sudo apt install python3-virtualenv
+
+notice : The project requires python 3.7 or above
 
 $virtualenv venv
 
