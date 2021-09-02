@@ -6,7 +6,11 @@ from app.db import base
 
 
 def init_db(db: Session) -> None:
-
+    """
+    complete later
+    :param db:
+    :return:
+    """
     user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user:
         user_in = schemas.UserCreate(

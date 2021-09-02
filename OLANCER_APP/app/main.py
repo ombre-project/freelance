@@ -25,6 +25,10 @@ if settings.BACKEND_CORS_ORIGINS:
 
 @app.get("/", response_class=RedirectResponse)
 async def to_home():
+    """
+    this method redirect / url to /api/v1/home
+    :return: redirect to new url
+    """
     return RedirectResponse(url=words.read_home_url())
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

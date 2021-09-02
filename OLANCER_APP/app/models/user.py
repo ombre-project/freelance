@@ -9,6 +9,9 @@ if TYPE_CHECKING:
 
 
 class User(Base):
+    """
+    this is the model of project use in this app
+    """
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     full_name = Column(String, index=True)

@@ -6,10 +6,18 @@ cg = CoinGeckoAPI()
 
 
 class Rpos:
+    """This is a conceptual class representation values need to use in html templates
+    """
     def __init__(self):
         pass
 
     def head_foot(self):
+        """
+        get header and footer of html page values
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         head_foot_context = {
             "nav_list": words.read_nav_home_words(),
             "footer_list": enumerate(words.read_footer_home()),
@@ -17,7 +25,15 @@ class Rpos:
         return head_foot_context
 
     def url_silde(self, api, id):
-
+        """
+        get urls that use in html pages
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         urls = {
             "url_home": api+"home",
             "url_projects": api+"users/"+str(id)+"/project",
@@ -29,6 +45,12 @@ class Rpos:
         return urls
 
     def tabs_headers(self):
+        """
+        get tabs layout values for html page
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         tabs = {
             "funder": words.read_tabs_headers()[0],
             "lancer": words.read_tabs_headers()[1],
@@ -36,16 +58,25 @@ class Rpos:
         return tabs
 
     def coin_prices(self):
+        """
+        get the cost of ombre coin
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         price = cg.get_price(ids='ombre', vs_currencies='usd')
         prices = {
             "omb_price": price["ombre"]["usd"]
         }
-        # prices = {
-        #     "omb_price": 1
-        # }
         return prices
 
     def get_context_home(self):
+        """
+        get values of home page html template
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_home = {
             "title": words.read_title_home_word(),
             "nav_list": words.read_nav_home_words(),
@@ -57,6 +88,12 @@ class Rpos:
         }
         return context_home
     def get_contex_login(self):
+        """
+        get values of login page html template
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_login = {
             "title": words.read_title_signin_word(),
             "nav_list": words.read_nav_home_words(),
@@ -67,6 +104,13 @@ class Rpos:
         }
         return context_login
     def get_context_signup(self):
+        """
+        get values of signup page html template
+
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
+
         context_sign_up ={
             "nav_list": words.read_nav_home_words(),
             "footer_list": enumerate(words.read_footer_home()),
@@ -77,6 +121,16 @@ class Rpos:
         }
         return context_sign_up
     def get_context_profile(self, api, id):
+        """
+        get urls that use in html profile page
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
+
         context_profile = {
             "title": words.read_title_of_profile(),
             "label_fname": words.read_profile_fname(),
@@ -107,6 +161,15 @@ class Rpos:
         return context_profile
 
     def get_context_project(self, api, id):
+        """
+        get urls that use in html project page
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_profile = {
             "title": words.read_title_of_project(),
             "label_name": words.read_name_of_project_lancer(),
@@ -127,6 +190,15 @@ class Rpos:
         return context_profile
 
     def get_context_upload_project(self, api, id):
+        """
+        get urls that use in html upload project page
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_profile = {
             "title": words.read_title_of_upload_project_page(),
             "upload_project": words.read_placeholder_of_upload_project_page(),
@@ -140,6 +212,15 @@ class Rpos:
         return context_profile
 
     def get_context_accept_project(self, api, id):
+        """
+        get urls that use in html accepting project page
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_profile = {
             "title": words.read_present_project_title(),
             "submit": words.read_submit_of_present_project_page(),
@@ -154,6 +235,15 @@ class Rpos:
         return context_profile
 
     def get_context_wallet(self, api, id):
+        """
+        get urls that use in html wallet page
+        :param api: to add the first of url
+        :type api: str
+        :param id: id of the user
+        :type id: int
+        :return: a dictionary that use in html template
+        :rtype: dictionary
+        """
         context_wallet = {
             "title": words.read_ombre_title(),
             "rec_addr": words.read_ombre_recieve_address(),

@@ -8,36 +8,23 @@ import requests
 from emails.template import JinjaTemplate
 from jose import jwt
 from app.core.config import settings
-from typing import TypeVar
-from fastapi import Query
-from fastapi_pagination.default import Params as BaseParams
-from pydantic import BaseModel
-from fastapi_pagination.bases import RawParams, AbstractParams
 import json
 
 
-class Params(BaseModel, AbstractParams):
-    total_items: int
-    return_per_page: int
-
-    def to_raw_params(self) -> RawParams:
-        return RawParams(
-            limit=self.total_items,
-            offset=self.total_items * self.return_per_page,
-        )
-T = TypeVar("T")
-
-class Params(BaseParams):
-    size: int = Query(500, ge=1, le=4, description="Page size")
-
-
-
 def send_email(
-    email_to: str,
-    subject_template: str = "",
-    html_template: str = "",
-    environment: Dict[str, Any] = {},
+        email_to: str,
+        subject_template: str = "",
+        html_template: str = "",
+        environment: Dict[str, Any] = {},
 ) -> None:
+    """
+    complete later
+    :param email_to:
+    :param subject_template:
+    :param html_template:
+    :param environment:
+    :return:
+    """
     assert settings.EMAILS_ENABLED, "no provided configuration for email variables"
     message = emails.Message(
         subject=JinjaTemplate(subject_template),
@@ -56,6 +43,11 @@ def send_email(
 
 
 def send_test_email(email_to: str) -> None:
+    """
+    complete later
+    :param email_to:
+    :return:
+    """
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Test email"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "test_email.html") as f:
@@ -69,6 +61,13 @@ def send_test_email(email_to: str) -> None:
 
 
 def send_reset_password_email(email_to: str, email: str, token: str) -> None:
+    """
+    complete later
+    :param email_to:
+    :param email:
+    :param token:
+    :return:
+    """
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Password recovery for user {email}"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "reset_password.html") as f:
@@ -90,6 +89,13 @@ def send_reset_password_email(email_to: str, email: str, token: str) -> None:
 
 
 def send_new_account_email(email_to: str, username: str, password: str) -> None:
+    """
+    complete later
+    :param email_to:
+    :param username:
+    :param password:
+    :return:
+    """
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New account for user {username}"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "new_account.html") as f:
@@ -110,6 +116,11 @@ def send_new_account_email(email_to: str, username: str, password: str) -> None:
 
 
 def generate_password_reset_token(email: str) -> str:
+    """
+    complete later
+    :param email:
+    :return:
+    """
     delta = timedelta(hours=settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
     now = datetime.utcnow()
     expires = now + delta
@@ -121,13 +132,28 @@ def generate_password_reset_token(email: str) -> str:
 
 
 def verify_password_reset_token(token: str) -> Optional[str]:
+    """
+    complete later
+    :param token:
+    :return:
+    """
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         return decoded_token["email"]
     except jwt.JWTError:
         return None
 
+
 def transpose(l1, l2) -> str:
+    """
+    to transpose 2d array
+    :param l1:
+    :type l1:list
+    :param l2:
+    :type l2: list
+    :return:
+    :rtype: list
+    """
     for i in range(len(l1[0])):
         row = []
         for item in l1:
@@ -137,14 +163,41 @@ def transpose(l1, l2) -> str:
 
 
 def handle_uploaded_file(f, name, type_f, file_type):
-    address = os.getcwd()+'/statics/'+type_f+'/'+name+'.'+str(file_type)
+    """
+    to write file in a path and get the address of that
+    :param f: file
+    :type f: FILE
+    :param name: name of the file
+    :type name: str
+    :param type_f: directory name
+    :type type_f: str
+    :param file_type: type of the file
+    :type file_type:
+    :return: the address of file
+    :rtype: str
+    """
+    address = os.getcwd() + '/statics/' + type_f + '/' + name + '.' + str(file_type)
     with open(address, 'wb+') as destination:
         destination.write(f.read())
         destination.close()
-        return '/../static/'+type_f+'/'+name+'.'+str(file_type)
+        return '/../static/' + type_f + '/' + name + '.' + str(file_type)
+
 
 def handle_uploaded_file_project(f, dir, name, id_dir):
-    address = dir+'/'+name
+    """
+    to write file in a path and get the address of that
+    :param f: file
+    :type f: FILE
+    :param name: name of the file
+    :type name: str
+    :param dir: directory to save
+    :type dir: str
+    :param id_dir: directory to save
+    :type id_dir: str
+    :return: address of saving file
+    :rtype: str
+    """
+    address = dir + '/' + name
     with open(address, 'wb+') as destination:
         destination.write(f.read())
         destination.close()
@@ -152,149 +205,45 @@ def handle_uploaded_file_project(f, dir, name, id_dir):
 
 
 def row2dict(row, p):
+    """
+    to convert p to a schemas model
+    :param row: object
+    :type row: object
+    :param p: object
+    :type p: object
+    :return: schemas model
+    :rtype: object
+    """
     for column in vars(row).keys():
         for item in vars(p).keys():
             if column == item:
                 p.__setattr__(item, row.__getattribute__(column))
     return p
 
-class DaemonRPC:
-    def __init__(self, ip='127.0.0.1', port='19744'):
-        self.IP = ip
-        self.PORT = port
-        self.URL = 'http://' + self.IP + ':' + self.PORT + '/json_rpc'
-        self.header = {'Content-Type': 'application/json'}
-
-    def send_request(self, method=None, param=None):
-        data = {'jsonprc': '2.0', 'id': '0', 'method': method}
-        if param is not None:
-            data['params'] = param
-
-        try:
-            res = requests.post(self.URL, data=json.dumps(data), headers=self.header)
-            return res
-        except Exception as ex:
-            print('ERROR : ', type(ex))
-            print("Check Server Connection")
-
-    def print_version(self):
-        res = self.send_request('get_version')
-        if res is None: return
-        print('Version : ')
-        print(res.text[1:-1].split('{')[-1][3:-3])
-
-    def get_block_cound(self):
-        res = self.send_request('get_block_count')
-        if res is None: return
-        # print(res.text[1:-1].split('{')[-1][3:-3].split(',')[0][3:])
-        return res.text[1:-1].split('{')[-1][3:-3].split(',')[0][3:]
-
-    def on_get_block_hash(self, height):
-        res = self.send_request('on_get_block_hash', [height])
-        if res is None: return
-        print(res.text[1:-1].split(',')[-1][4:-2])
-        return res.text[1:-1].split(',')[-1][4:-2]
-
-    def get_block_template(self, wallet_address, reserve_size):
-        params = {'wallet_address': wallet_address, 'reserve_size': int(reserve_size)}
-        res = self.send_request('get_block_template', params)
-        if res is None: return
-        return res.text
-
-    def submit_block(self, block_blob_data):
-        param = [block_blob_data]
-        res = self.send_request('submit_block', param)
-        if res is None: return
-        return res.text
-
-    def get_last_block_header(self):
-        res = self.send_request('get_last_block_header')
-        if res is None: return
-        return res.text
-
-    def get_block_header_by_hash(self, hash):
-        param = {'hash': hash}
-        res = self.send_request('get_block_by_hash', param)
-        if res is None: return
-        return res.text
-
-    def get_block_header_by_height(self, height):
-        param = {'height': int(height)}
-        res = self.send_request('get_block_header_by_height', param)
-        if res is None: return
-        return res.text
-
-    def get_block_headers_range(self, start_height, end_height):
-        params = {'start_height': int(start_height), 'end_height': int(end_height)}
-        res = self.send_request('get_block_headers_range', params)
-        if res is None: return
-        return res.text
-
-    def get_block_by_hash(self, hash):
-        param = {'hash': hash}
-        res = self.send_request('get_block', param)
-        if res is None: return
-        return res.text
-
-    def get_block_by_height(self, height):
-        param = {'height': int(height)}
-        res = self.send_request('get_block', param)
-        if res is None: return
-        return res.text
-
-    def get_connection(self):
-        res = self.send_request('get_connection')
-        if res is None: return
-        return res.text
-
-    def get_info(self):
-        res = self.send_request('get_info')
-        if res is None: return
-        return res.text
-
-    def get_fork_info(self):
-        res = self.send_request('hard_fork_info')
-        if res is None: return
-        return res.text
-
-    def set_ban_by_host(self, host, ban, seconds):
-        param = {'bans': [{'host': host, 'ban': ban, 'second': seconds}]}
-        res = self.send_request('set_bans', param)
-        if res is None: return
-        return res.text
-
-    def set_ban_by_ip(self, ip, ban, seconds):
-        param = {'bans': [{'ip': ip, 'ban': ban, 'second': seconds}]}
-        res = self.send_request('set_bans', param)
-        if res is None: return
-        return res.text
-
-    def get_bans(self):
-        res = self.send_request('get_bans')
-        if res is None: return
-        return res.text
-
-    def flush_txpool(self, list_of_transactions_ids):
-        param = {'txids': list_of_transactions_ids}
-        res = self.send_request('flush_txpool', param)
-        if res is None: return
-        return res.text
-
-    def get_output_histogeram(self, amounts):
-        params = {'amountts': amounts}
-        res = self.send_request('get_output_histogram', params)
-        if res is None: return
-        return res.text
-
 
 class WalletRPC:
+    """
+    connect to ombre-wallet-rpc
+    """
+
     def __init__(self, ip='127.0.0.1', port='19746'):
+        """
+        initial function for connect to ombre-wallet-rpc
+        :param ip:string,wallet-rpc daemon ip
+        :param port:string,wallet-rpc daemon port
+        """
         self.IP = ip
         self.PORT = port
         self.URL = 'http://' + self.IP + ':' + self.PORT + '/json_rpc'
         self.header = {'Content-Type': 'application/json'}
 
     def send_request(self, method=None, param=None):
+        """
+        send json data to rpc daemon
+        :param method:string,method of api
+        :param param:dict,dictionary of parameters
+        :return:response of daemon
+        """
         data = {'jsonprc': '2.0', 'id': '0', 'method': method}
         if param is not None:
             data['params'] = param
@@ -307,47 +256,99 @@ class WalletRPC:
             print("Check Server Connection")
 
     def create_wallet(self, wallet_name, password):
+        """
+        create wallet in file directory
+        :param wallet_name:string,name of wallet
+        :param password:string, password for wallet
+        :return: None
+        """
         param = {'filename': wallet_name, 'password': password, 'language': 'English'}
         res = self.send_request('create_wallet', param)
         if res is None: return
 
     def open_wallet(self, wallet_file, password):
+        """
+        open wallet with filename and password
+        :param wallet_file:string, open wallet with this file name
+        :param password:string, password of wallet
+        :return: None
+        """
         param = {'filename': wallet_file, 'password': password}
         res = self.send_request('open_wallet', param)
         if res is None: return
 
     def get_transfers(self, mode):
+        """
+        show all transfers that the wallet done
+        :param mode:
+        :return:
+        """
         param = {mode: True}
         res = self.send_request('get_transfers', param)
         if res is None: return
         print(res.text)
 
     def get_accounts(self):
+        """
+        get the open wallet information
+        :return: json file
+        """
         res = self.send_request('get_accounts')
         if res is None: return
         # print(res.text)
         return res
 
     def transfer(self, wallet_address, amount):
+        """
+        transfer amount ombre to wallet_address from open wallet
+        :param wallet_address:string,destination wallet address
+        :param amount:int,amount of ombre in atomic unit
+        :return:string,response node
+        """
         data = {'destinations': [{'amount': amount, 'address': wallet_address}]}
         res = self.send_request('transfer', data)
         if res is None: return
         return res.text
 
     def close_wallet(self, ):
+        """
+        close open wallet
+        :return:string,response node
+        """
         res = self.send_request('close_wallet')
         return res.text
 
 
 class WalletOlancer:
+    """
+    the function that olancer web site use for conncting ombre-wallet-rpc and use it
+    """
+
     def __init__(self, ip='127.0.0.1', port='19746'):
+        """
+        connect to ombre-wallet-rpc
+        :param ip:string,ombre-wallet-rpc ip
+        :param port:string,ombre-wallet-rpc port
+        """
         self.wallet_rpc = WalletRPC(ip, port)
 
     def create_wallet(self, username, password):
+        """
+        create wallet with the username as file name and password
+        :param username:string,wallet file name
+        :param password:string,wallet password
+        :return:
+        """
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.create_wallet(username, password)
 
     def check_wallet(self, username, password):
+        """
+        read address and balance form wallet
+        :param username:string,wallet file name
+        :param password:string,wallet password
+        :return:dictionary,wallet info
+        """
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.open_wallet(username, password)
         res = self.wallet_rpc.get_accounts()
@@ -356,6 +357,15 @@ class WalletOlancer:
         return wallet_info
 
     def transfer(self, from_user, from_pass, to_user, to_pass, amount):
+        """
+        transfer ombre from to users
+        :param from_user:string,file name user one
+        :param from_pass:string,password user one
+        :param to_user:string,file name user two
+        :param to_pass:string,password user two
+        :param amount:int,number of ombre that transfer from user one to user two
+        :return:string,node response
+        """
         wallet_info_des = self.check_wallet(to_user, to_pass)
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.open_wallet(from_user, from_pass)
@@ -363,6 +373,14 @@ class WalletOlancer:
         return res
 
     def transfer_to_address(self, username, password, address, amount):
+        """
+        transfer ombre from wallet to address
+        :param username:string, wallet file name
+        :param password:string, wallet password
+        :param address:string, address of destination wallet
+        :param amount:string, amount of ombre to transfer
+        :return:dictionary,node response
+        """
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.open_wallet(username, password)
         res = self.wallet_rpc.transfer(address, (amount * (10 ** 9)))

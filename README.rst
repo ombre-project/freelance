@@ -1,3 +1,0 @@
-Freelancer
-
-Ahmad Yoosofan

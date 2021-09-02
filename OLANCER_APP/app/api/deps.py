@@ -28,6 +28,9 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 
 def get_db() -> Generator:
+    """
+    dependency to use db
+    """
     try:
         db = SessionLocal()
         yield db
@@ -36,6 +39,16 @@ def get_db() -> Generator:
 
 
 class OAuth2PasswordBearerWithCookie(OAuth2):
+    """This is a conceptual class representation of OAuth2 password bearer working with cookie
+        :param tokenUrl: the url token to check
+        :type tokenUrl: str
+        :param scheme_name: name of scheme like bearer
+        :type scheme_name: str
+        :param scopes: level of access
+        :type scopes: dict
+        :param auto_error: default is True
+        :type auto_error: bool
+    """
     def __init__(
             self,
             tokenUrl: str,
@@ -68,7 +81,15 @@ oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl=f"{settings.API_V1_STR}/
 def get_current_user_cookie(
     db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
 ) -> models.User:
-    print("wdf : ", token)
+    """
+    to check to access token of client with cookie
+    :param db: database object of session local
+    :type db: Session
+    :param token: access token
+    :type token: str
+    :return: get the user object
+    :rtype: user
+    """
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
@@ -89,6 +110,12 @@ def get_current_user_cookie(
 def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
 ) -> models.User:
+    """
+    complete later
+    :param db:
+    :param token:
+    :return:
+    """
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
@@ -108,6 +135,11 @@ def get_current_user(
 def get_current_active_user(
     current_user: models.User = Depends(get_current_user_cookie),
 ) -> models.User:
+    """
+    complete later
+    :param current_user:
+    :return:
+    """
     if not crud.user.is_active(current_user):
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
@@ -116,6 +148,11 @@ def get_current_active_user(
 def get_current_active_superuser(
     current_user: models.User = Depends(get_current_user_cookie),
 ) -> models.User:
+    """
+    complete later
+    :param current_user:
+    :return:
+    """
     if not crud.user.is_superuser(current_user):
         raise HTTPException(
             status_code=400, detail="The user doesn't have enough privileges"

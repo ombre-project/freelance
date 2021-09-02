@@ -14,3 +14,4 @@ aiofiles
 pycoingecko
 fastapi-pagination
 requests
+pydantic[email]

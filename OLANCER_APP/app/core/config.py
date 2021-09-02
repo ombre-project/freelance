@@ -7,6 +7,9 @@ from fastapi import Form
 
 
 class Settings () :
+    """
+    this is a class that contain basic setting to running  app
+    """
 
     read_j = ReadJson()
     API_V1_STR: str = "/api/v1"
@@ -24,6 +27,13 @@ class Settings () :
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        """
+        the validator of backend cors origins
+        :param v: the urls allow
+        :type v: list
+        :return: the url addresses
+        :rtype: str list
+        """
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
         elif isinstance(v, (list, str)):
@@ -35,6 +45,13 @@ class Settings () :
 
     @validator("SENTRY_DSN", pre=True)
     def sentry_dsn_can_be_blank(cls, v: str) -> Optional[str]:
+        """
+        validator of dns
+        :param v: dns
+        :type v:str
+        :return: dns sentry
+        :rtype:str
+        """
         if len(v) == 0:
             return None
         return v
@@ -47,6 +64,15 @@ class Settings () :
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+        """
+        validator to connect to db
+        :param v: object of postgres user connection details
+        :type v: str
+        :param values: values to connect to postgres db
+        :type values: dict
+        :return: postgres dsn
+        :rtype: str
+        """
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -67,6 +93,12 @@ class Settings () :
 
     @validator("EMAILS_FROM_NAME")
     def get_project_name(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+        """
+        complete later
+        :param v:
+        :param values:
+        :return:
+        """
         if not v:
             print('values : ',values)
             return values["PROJECT_NAME"]
@@ -78,6 +110,12 @@ class Settings () :
 
     @validator("EMAILS_ENABLED", pre=True)
     def get_emails_enabled(cls, v: bool, values: Dict[str, Any]) -> bool:
+        """
+        complete later
+        :param v:
+        :param values:
+        :return:
+        """
         return bool(
             values.get("SMTP_HOST")
             and values.get("SMTP_PORT")
@@ -95,8 +133,14 @@ class Settings () :
 
 
 def as_form(cls: Type[BaseModel]):
+    """
+    this method use for convert model of data server get from client to form model
+    :param cls: Model
+    :type cls: BaseModel
+    :return: form model
+    :rtype: Model
+    """
     new_parameters = []
-
     for field_name, model_field in cls.__fields__.items():
         model_field: ModelField  # type: ignore
 

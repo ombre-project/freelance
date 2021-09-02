@@ -6,6 +6,9 @@ if TYPE_CHECKING:
 
 
 class Project(Base):
+    """
+    this is the model of project use in this app
+    """
     __tablename__ = "projects"
     id_proj = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, index=True)

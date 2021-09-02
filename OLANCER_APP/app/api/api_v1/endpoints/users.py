@@ -29,42 +29,18 @@ ombre = WalletOlancer(ip=words.read_ombre_ip(), port=str(words.read_ombre_port()
 
 @router.get("/signup", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def signup_user(request: Request):
+    """
+    response HTML signup page
+    :param request: request
+    :type request: Request
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     sample = rpos_context.get_context_signup()
     sample.update({"request": request})
     return templates.TemplateResponse(
         "signup.html", context=sample
     )
-
-@router.get("/", response_model=List[schemas.User])
-def read_users(
-    db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    users = crud.user.get_multi(db, skip=skip, limit=limit)
-    return users
-
-
-@router.post("/", response_model=schemas.User)
-def create_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.UserCreate,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    user = crud.user.get_by_email(db, email=user_in.email)
-    if user:
-        raise HTTPException(
-            status_code=400,
-            detail="The user with this username already exists in the system.",
-        )
-    user = crud.user.create(db, obj_in=user_in)
-    if settings.EMAILS_ENABLED and user_in.email:
-        send_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password
-        )
-    return user
 
 
 @router.put("/me", response_model=schemas.User)
@@ -76,6 +52,15 @@ def update_user_me(
     email: EmailStr = Body(None),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
+    """
+    update user me complete later
+    :param db:
+    :param password:
+    :param full_name:
+    :param email:
+    :param current_user:
+    :return:
+    """
     current_user_data = jsonable_encoder(current_user)
     user_in = schemas.UserUpdate(**current_user_data)
     if password is not None:
@@ -88,16 +73,9 @@ def update_user_me(
     return user
 
 
-@router.get("/me", response_model=schemas.User)
-def read_user_me(
-    db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_active_user),
-) -> Any:
-    return current_user
-
 
 @router.post("/open", response_class=RedirectResponse)
-async def create_user_open(
+def create_user_open(
     *,
     db: Session = Depends(deps.get_db),
     username: str = Form(...),
@@ -105,6 +83,22 @@ async def create_user_open(
     password: str = Form(...),
     re_password: str = Form(...),
 ) -> Any:
+    """
+    create user
+    :param db: database object of session local
+    :type db: Session
+    :param username: user name of user
+    :type username: str
+    :param email: email of user
+    :type email: EmailStr
+    :param password: password of user
+    :type password: str
+    :param re_password: repeat password of user
+    :type password: str
+    :raises: if user registration is open or email exits before or password not equal re_password
+    :return: Redirect to a new page
+    :rtype: RedirectResponse
+    """
     if not settings.USERS_OPEN_REGISTRATION:
         raise HTTPException(
             status_code=403,
@@ -113,7 +107,7 @@ async def create_user_open(
     user = crud.user.get_by_email(db, email=email)
     if user:
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="The user with this username already exists in the system",
         )
     if password != re_password:
@@ -146,10 +140,20 @@ def wallet(
     user_id: int,
     db: Session = Depends(deps.get_db)
 ):
+    """
+    response wallet HTML page
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :return: HTML Template
+    :rtype: HTMLResponse
+    """
     sample_user = crud.user.get(db=db, id=user_id)
     res = ombre.check_wallet(username=sample_user.username_omb, password=sample_user.password_omb)
     sample = rpos_context.get_context_wallet(words.read_api_prev_url(), user_id)
-    print(res["balance"])
     sample.update({"request": req, "wallet_address": words.read_ombre_wallet_address()+str(sample_user.wallet_address), "wallet_balance": words.read_ombre_balance()+str(float(res["balance"])/(10**9)), "USER_ID": str(user_id)})
     return templates.TemplateResponse(
         "wallet.html", context=sample
@@ -164,10 +168,25 @@ def wallet(
     credit: int = Form(...),
     wallet_address: str = Form(...)
 ):
+    """
+    response wallet HTML page
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :return: HTML Template
+    :rtype: HTMLResponse
+    :param credit: The amount of value that this user wants to transfer
+    :param wallet_address: the target wallet address
+    :raises: if the credit < balance of this user
+    :return: HTML Templates
+    :rtype: HTMLResponse
+    """
     sample_user = crud.user.get(db=db, id=user_id)
     res = ombre.check_wallet(username=sample_user.username_omb, password=sample_user.password_omb)
     sample = rpos_context.get_context_wallet(words.read_api_prev_url(), user_id)
-    print(res["balance"])
     if int(res["balance"]) > credit:
         ombre.transfer_to_address(username=sample_user.username_omb, password=sample_user.password_omb, address=wallet_address, amount=credit)
     else:
@@ -186,6 +205,17 @@ def read_user_by_id(
     user_id: int,
     db: Session = Depends(deps.get_db),
 ):
+    """
+    response profile HTML page
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     user = crud.user.get_complete_user(db, id=user_id)
     if user.img_address is not None:
         src_img = user.img_address
@@ -233,21 +263,42 @@ def read_user_by_id(
     resume: UploadFile = File(...),
     res: UserProf = Depends(UserProf.as_form)
     ):
+    """
+    update user and response HTML page of user
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param image: image fie
+    :param resume: resume file
+    :param res: user detail
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     user_smp = crud.user.get(db=db, id=user_id)
     try:
         if resume.content_type.split('/')[1] != "octet-stream":
-            os.remove(os.getcwd() + "/statics/file/" + str(user_smp.resume_address).split("/")[4])
+            os.remove(os.getcwd() + f"/statics/user/files/{user_id}/" + str(user_smp.resume_address).split("/")[4])
         if image.content_type.split('/')[1] != "octet-stream":
-            os.remove(os.getcwd() + "/statics/images/" + str(user_smp.img_address).split("/")[4])
+            os.remove(os.getcwd() + f"/statics/user/images/{user_id}/" + str(user_smp.img_address).split("/")[4])
     except Exception as e:
         print(e)
 
     if resume.content_type.split('/')[1] != "octet-stream":
-        res.resume_address = handle_uploaded_file(resume.file, str(datetime.datetime.today()), 'file', resume.content_type.split('/')[1])
+        if os.path.exists(os.getcwd()+f"/statics/user/files/{user_id}/"):
+            res.resume_address = handle_uploaded_file(resume.file, str(datetime.datetime.today()), f'user/files/{user_id}/', resume.content_type.split('/')[1])
+        else:
+            os.mkdir(os.getcwd()+f"/statics/user/files/{user_id}/")
     else:
         res.resume_address = user_smp.resume_address
     if image.content_type.split('/')[1] != "octet-stream":
-        res.img_address = handle_uploaded_file(image.file, str(datetime.datetime.today()), 'images', image.content_type.split('/')[1])
+        if os.path.exists(os.getcwd() + f"/statics/user/images/{user_id}/"):
+            res.img_address = handle_uploaded_file(image.file, str(datetime.datetime.today()), f'user/images/{user_id}', image.content_type.split('/')[1])
+        else:
+            os.mkdir(os.getcwd() + f"/statics/user/images/{user_id}/")
+            res.img_address = handle_uploaded_file(image.file, str(datetime.datetime.today()), f'user/images/{user_id}', image.content_type.split('/')[1])
     else:
         res.img_address = user_smp.img_address
     crud.user.update_complete_user(db=db, id=user_id, obj_in=res, db_obj=user_smp)
@@ -281,30 +332,26 @@ def read_user_by_id(
         "profile.html", context=sample
     )
 
-@router.put("/{user_id}", response_model=schemas.User)
-def update_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_id: int,
-    user_in: schemas.UserUpdate,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    user = crud.user.get(db, id=user_id)
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="The user with this username does not exist in the system",
-        )
-    user = crud.user.update(db, db_obj=user, obj_in=user_in)
-    return user
 
-# ,Depends(deps.get_current_active_user)
-@router.get("/{user_id}/project", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(pagination_params)])
+@router.get("/{user_id}/project", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(pagination_params),Depends(deps.get_current_active_user)])
 def project(request: Request,
             user_id: int,
             db: Session = Depends(deps.get_db),
             params: Params = Depends()
 ):
+    """
+    response HTML page of project
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param params:
+    :type params: Params
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     params.size = 4
     list_of_projects = paginate(sequence=crud.project.get_all_projects_not_finish(db=db, user_id=user_id), params=params).dict()
     sample = rpos_context.get_context_project(words.read_api_prev_url(), user_id)
@@ -330,6 +377,25 @@ def project(request: Request,
             img: UploadFile = File(...),
             params: Params = Depends()
 ):
+    """
+    to define a project and response project page
+    :param req: request
+    :type req: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param params:
+    :type params: Params
+    :param res: details of project
+    :type res: ProjectProf
+    :param file: file of description and details of project
+    :type file: UploadFile
+    :param img: image of project
+    :type img: UploadFile
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     res.file_addr = handle_uploaded_file(file.file, str(datetime.datetime.today()), 'projects/file',
                                                   file.content_type.split('/')[1])
     res.img_addr = handle_uploaded_file(img.file, str(datetime.datetime.today()), 'projects/images',
@@ -352,14 +418,29 @@ def project(request: Request,
         context=sample
     )
 
-# , dependencies=[Depends(deps.get_current_active_user)]
-@router.post("/{user_id}/project-search", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+
+@router.post("/{user_id}/project-search", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(deps.get_current_active_user)])
 def project_search(request: Request,
             user_id: int,
             query: Optional[str] = Form(...),
             db: Session = Depends(deps.get_db),
             params: Params = Depends()
 ):
+    """
+    search in description and name of the projects and response project HTML page
+    :param query: the word that user want to search in list of projects
+    :type query: str
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param params:
+    :type params: Params
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     params.size = 4
     list_of_projects = paginate(sequence=crud.project.search_project(db=db, query=query, user_id=user_id), params=params).dict()
     sample = rpos_context.get_context_project(words.read_api_prev_url(), user_id)
@@ -379,13 +460,31 @@ def project_search(request: Request,
 
 
 @router.post("/{user_id}/project-accepted/{project_id}", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(deps.get_current_active_user)])
-def project(request: Request,
+def project(
+            request: Request,
             user_id: int,
             project_id: int,
             db: Session = Depends(deps.get_db),
             params: Params = Depends(),
             p: ProjectTaken = Depends()
 ):
+    """
+    to accept project to do it and upload later
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param project_id: id of the user
+    :type project_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param params:
+    :type params: Params
+    :param p: details of project
+    :type p: ProjectTaken
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     params.size = 4
     proj_sample = crud.project.get(db=db, id=project_id)
     p = row2dict(row=proj_sample, p=p)
@@ -419,10 +518,22 @@ def project(request: Request,
 
 
 @router.get("/{user_id}/project-upload/{project_id}", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(deps.get_current_active_user)])
-def project_upload(request: Request,
+def project_upload(
+            request: Request,
             user_id: int,
             project_id: int
 ):
+    """
+    response the HTML page that user can upload project that this user finish
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param project_id: id of the user
+    :type project_id: int
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     sample = rpos_context.get_context_upload_project(words.read_api_prev_url(), user_id)
     sample.update({"USER_ID": user_id, "PROJ_ID": project_id, "request": request})
     return templates.TemplateResponse(
@@ -439,6 +550,23 @@ def project_upload(request: Request,
         file: UploadFile = File(...),
         p: ProjectFinal = Depends()
 ):
+    """
+    upload the project this user finish and response HTML page
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param project_id: id of the user
+    :type project_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param file: File of project this user upload
+    :type file: UploadFile
+    :param p: details of project
+    :type p: ProjectFinal
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     proj_sample = crud.project.get(db=db, id=project_id)
     p = row2dict(row=proj_sample, p=p)
     directory = os.getcwd() + f"/statics/projects/users_projects/{proj_sample.project_offer_id}"
@@ -467,10 +595,22 @@ def project_upload(request: Request,
 
 
 @router.get("/{user_id}/project-finish/{project_id}", response_class=HTMLResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(deps.get_current_active_user)])
-def project_upload(request: Request,
+def project_upload(
+            request: Request,
             user_id: int,
             project_id: int
 ):
+    """
+    this method response HTML page to the user that define project and other user finish that project and now this user can rate the project and pay the fee
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param project_id: id of the user
+    :type project_id: int
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     sample = rpos_context.get_context_accept_project(words.read_api_prev_url(), user_id)
     sample.update({"url_download_proj": "/api/v1/users/"+str(user_id)+"/project-download/"+str(project_id), "USER_ID": user_id, "PROJ_ID": project_id, "request": request})
     return templates.TemplateResponse(
@@ -489,6 +629,26 @@ def project_upload(request: Request,
             common_des: Optional[str] = Form(...),
             p: ProjectFinal = Depends()
 ):
+    """
+    in this method user pay the cost of project and rate the project and it response the HTML page
+    :param request: request
+    :type request: Request
+    :param user_id: id of the user
+    :type user_id: int
+    :param project_id: id of the user
+    :type project_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param common: the rate of the project in it
+    :type common: int
+    :param common_des: the common about the project
+    :type common_des: str
+    :param p: details of project
+    :type p: ProjectFinal
+    :raises: if the project not taken before or project finish before or project pay before or common not between 0 to 5 or balance of user was not enough method raise
+    :return: HTML template
+    :rtype:HTMLResponse
+    """
     proj_sample = crud.project.get(db=db, id=project_id)
     p = row2dict(row=proj_sample, p=p)
     if proj_sample.is_taken and proj_sample.is_finish and not proj_sample.is_pay and common >=0 and common <= 5:
@@ -528,6 +688,17 @@ def project_upload(
             project_id: int,
             db: Session = Depends(deps.get_db)
 ):
+    """
+    this method is use for download files of project
+    :param user_id: id of the user
+    :type user_id: int
+    :param db: database object of session local
+    :type db: Session
+    :param project_id: id of project
+    :type project_id: int
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     sample = crud.project.get(db=db, id=project_id)
     if sample.project_offer_id == user_id and sample.is_finish:
         return FileResponse(path=sample.address_of_project_uploaded)

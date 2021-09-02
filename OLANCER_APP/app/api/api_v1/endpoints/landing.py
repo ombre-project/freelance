@@ -13,6 +13,13 @@ rpos_context = repositories.Rpos()
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def landing(request: Request):
+    """
+    response landing page
+    :param request: request
+    :type request:Request
+    :return: HTML template
+    :rtype: HTMLResponse
+    """
     arr = []
     transpose(words.read_comment_home_cards(), arr)
     sample = rpos_context.get_context_home()
