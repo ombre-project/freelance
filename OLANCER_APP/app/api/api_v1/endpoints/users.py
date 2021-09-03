@@ -119,7 +119,17 @@ def create_user_open(
         password_omb = str(uuid.uuid4())
         username_omb = str(uuid.uuid4())
         res = ombre.create_wallet(username=username_omb, password=password_omb)
+        if 'error' in res:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="node not ready !!!",
+            )
         res = ombre.check_wallet(username=username_omb, password=password_omb)
+        if 'error' in res:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="node not ready !!!",
+            )
         print(res)
         wallet_address = res["address"]
     except Exception as e:
@@ -153,6 +163,11 @@ def wallet(
     """
     sample_user = crud.user.get(db=db, id=user_id)
     res = ombre.check_wallet(username=sample_user.username_omb, password=sample_user.password_omb)
+    if 'error' in res:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="node not ready !!!",
+        )
     sample = rpos_context.get_context_wallet(words.read_api_prev_url(), user_id)
     sample.update({"request": req, "wallet_address": words.read_ombre_wallet_address()+str(sample_user.wallet_address), "wallet_balance": words.read_ombre_balance()+str(float(res["balance"])/(10**9)), "USER_ID": str(user_id)})
     return templates.TemplateResponse(
@@ -186,6 +201,11 @@ def wallet(
     """
     sample_user = crud.user.get(db=db, id=user_id)
     res = ombre.check_wallet(username=sample_user.username_omb, password=sample_user.password_omb)
+    if 'error' in res:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="node not ready !!!",
+        )
     sample = rpos_context.get_context_wallet(words.read_api_prev_url(), user_id)
     if int(res["balance"]) > credit:
         ombre.transfer_to_address(username=sample_user.username_omb, password=sample_user.password_omb, address=wallet_address, amount=credit)
@@ -657,6 +677,11 @@ def project_upload(request: Request,
         res = ombre.check_wallet(username=user_payer.username_omb, password=user_payer.password_omb)
         if float(res["balance"]) > proj_sample.cost:
             res = ombre.transfer(from_user=user_payer.username_omb, from_pass=user_payer.password_omb, to_user=user_receiver.username_omb, to_pass=user_receiver.password_omb, amount=int(proj_sample.cost))
+            if 'error' in res:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="node not ready !!!",
+                )
             print(res)
             p.common = common
             p.common_describe = common_des

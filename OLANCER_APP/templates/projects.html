@@ -31,7 +31,7 @@
     <div id="funder_view_page" class="view-page" style="display:none">
       <form action="/api/v1/users/{{ID_USER}}/project-search" method="post" class="col proj-form" enctype="multipart/form-data">
           <div class="row" style="align-self:center;">
-              <input class="search-input" type="search" name="query" id="search" style="border-radius:0;width:60rem;" aria-label="Search through site content">
+              <input class="search-input" type="search" name="query" id="search" style="border-radius:0;width:60rem;" aria-label="Search through site content" value="" required="required">
               <input  class="search-btn" id="submit_search" type="submit" name="submit-search" value="submit">
           </div>
       </form >

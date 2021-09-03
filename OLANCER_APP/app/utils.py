@@ -243,6 +243,7 @@ class WalletRPC:
         :param method:string,method of api
         :param param:dict,dictionary of parameters
         :return:response of daemon
+        :rtype:string
         """
         data = {'jsonprc': '2.0', 'id': '0', 'method': method}
         if param is not None:
@@ -303,7 +304,8 @@ class WalletRPC:
         transfer amount ombre to wallet_address from open wallet
         :param wallet_address:string,destination wallet address
         :param amount:int,amount of ombre in atomic unit
-        :return:string,response node
+        :return:response node
+        :rtype:string
         """
         data = {'destinations': [{'amount': amount, 'address': wallet_address}]}
         res = self.send_request('transfer', data)
@@ -347,7 +349,8 @@ class WalletOlancer:
         read address and balance form wallet
         :param username:string,wallet file name
         :param password:string,wallet password
-        :return:dictionary,wallet info
+        :return:wallet info
+        :rtype:dict
         """
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.open_wallet(username, password)
@@ -364,7 +367,8 @@ class WalletOlancer:
         :param to_user:string,file name user two
         :param to_pass:string,password user two
         :param amount:int,number of ombre that transfer from user one to user two
-        :return:string,node response
+        :return:node response
+        :rtype:str
         """
         wallet_info_des = self.check_wallet(to_user, to_pass)
         self.wallet_rpc.close_wallet()
@@ -379,7 +383,8 @@ class WalletOlancer:
         :param password:string, wallet password
         :param address:string, address of destination wallet
         :param amount:string, amount of ombre to transfer
-        :return:dictionary,node response
+        :return:node response
+        "rtype:dict
         """
         self.wallet_rpc.close_wallet()
         self.wallet_rpc.open_wallet(username, password)
