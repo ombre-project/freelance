@@ -28,7 +28,7 @@ Installation:
  ``$ sudo apt install postgresql``
 - Check it is installed:
  ``$ sudo -i -u postgres``
-- Create user:
+- Create user :
  * ``postgres@server$ createuser --interactive --pwprompt``
  * notice : (username : ombre)
  * notice : (password : ombre123)
