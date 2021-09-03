@@ -29,7 +29,7 @@ Installation:
 - Check it is installed:
  ``$ sudo -i -u postgres``
 - Create user:
- ``postgres@server$ createuser --interactive --pwprompt``
+ * ``postgres@server$ createuser --interactive --pwprompt``
  * notice : (username : ombre)
  * notice : (password : ombre123)
 - Do one of the followings:
@@ -127,13 +127,13 @@ Project structure:
 - statics -> js
  * this directory keep js files to use in client side of this app
 
--statics -> projects
+- statics -> projects
  * this directory , app saving image of profile and files of each user that we need to save in all over project
 
--templates -> include
+- templates -> include
  * this directory keeps headers of the app ui html files
 
--templates -> *.html
+- templates -> *.html
  * this files are html files they use in the ui of the client side of this app
 
 3. requirement.txt
