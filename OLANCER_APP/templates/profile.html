@@ -1,0 +1,130 @@
+{% extends 'base_loged_in.html' %}
+{% block content %}
+            <section class="sec_prof_1">
+                <div class="tab_bar">
+                  <button id="f" class="tab_btn" onclick="openPage('lancer_view_page')">{{funder}}</button>
+                  <button id="l" class="tab_btn" onclick="openPage('funder_view_page')">{{lancer}}</button>
+                </div>
+                    <form action="/api/v1/users/{{ID_USER}}/profile" method="post" class="row prof-form" enctype="multipart/form-data">
+                        <label for="uploadImage">
+                          <input type="file" name="image" id="uploadImage" style="display:none;" onchange="PreviewImage();" value="{{prof_img}}" multiple>
+                          <img id="uploadPreview" src="{{prof_img}}" alt="omb" class="prof-img"/>
+                        </label>
+                        <div class="prof-fields col-prof">
+                            <label for="fname">{{label_fname}}</label>
+                            <input id="fname" type="text" name="full_name" value="{{input_fname}}">
+                            <label for="burn">{{label_burn}}</label>
+                            <input id="burn" type="text" name="born" value="{{input_burn}}">
+                            <label for="resume">{{label_resume}}</label>
+                            <input id="resume" type="file" name="resume" class="btn-prof" multiple>
+                            <a href="{{resume_link}}" class="btn-prof a-tag-btn">Download</a>
+                            <label for="omb_wallet_address">{{label_owa}}</label>
+                            <input id="omb_wallet_address" type="text" name="wallet_address" value="{{input_owa}}">
+                            <label for="bio">{{label_bio}}</label>
+                            <input id="bio" type="text" name="bio" value="{{input_bio}}"/>
+                            <label for="addr">{{label_address}}</label>
+                            <input id="addr" type="text" name="address" value="{{input_address}}"/>
+                            <label for="city">{{label_city}}</label>
+                            <input id="city" type="text" name="city" value="{{input_city}}"/>
+                            <label for="country">{{label_country}}</label>
+                            <input id="country" type="text" name="country" value="{{input_country}}"/>
+                            <input value="submit" name="{{submit_prof}}" type="submit" class="btn-prof">
+                        </div>
+                    </form>
+            </section>
+            <section id="lancer_view_page" class="sec_prof_2 col view-page">
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+                <div class="col">
+                    <h2>{{title_project_developed}}</h2>
+                    <div class="row cards_1">
+                        <button id="btn_card_back_1" class="btn_card round">&#8249;</button>
+                        {% for item in list_projects_dev_final %}
+                        <div class="card">
+                            <div class="img_card">
+                                <img  class="fit-img" src="{{item.img_addr}}">
+                            </div>
+                            <div class="entire-card">
+                                <p><span>{{NAME}}</span>{{item.name}}</p>
+                                <p><span>{{END_DATE}}</span>{{item.end_date}}</p>
+                                <p><span>{{COST}}</span>{{item.cost}}</p>
+                                <p><span>{{DESCRIBE}}</span>{{item.description}}</p>
+                                <div class="row" style="margin-top:1rem;">
+                                    {% for i in range(item.common) %}
+                                        <i class="fa fa-star"></i>
+                                    {% endfor %}
+                                    {% for i in range(5-item.common) %}
+                                        <i class="fa fa-star-o"></i>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                        <button id="btn_card_next_1" class="btn_card round">&#8250;</button>
+                </div>
+                <div class="col">
+                    <h2>{{title_project_developing}}</h2>
+                    <div class="row cards_2">
+                        <button id="btn_card_back_2" class="btn_card round">&#8249;</button>
+                        {% for item in list_projects_dev %}
+                        <div class="card" onclick="onClickCardDownload({{item.id_proj}})">
+                        <div class="img_card">
+                                <img  class="fit-img" src="{{item.img_addr}}">
+                            </div>
+                            <div class="entire-card">
+                                <p><span>{{NAME}}</span>{{item.name}}</p>
+                                <p><span>{{START_DATE}}</span>{{item.start_date}}</p>
+                                <p><span>{{COST}}</span>{{item.cost}}</p>
+                                <p><span>{{DESCRIBE}}</span>{{item.description}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                        <button id="btn_card_next_2" class="btn_card round">&#8250;</button>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            <section id="funder_view_page" class="sec_prof_2 col view-page" style="display:none;">
+                <div class="col">
+                    <h2>{{title_project_define_and_developed}}</h2>
+                    <div class="row cards_3">
+                        <button id="btn_card_back_3" class="btn_card round">&#8249;</button>
+                        {% for item in list_projects_def_final %}
+                        <div class="card">
+                            <div class="img_card">
+                                <img  class="fit-img" src="{{item.img_addr}}">
+                            </div>
+                            <div class="entire-card">
+                                <p><span>{{NAME}}</span>{{item.name}}</p>
+                                <p><span>{{END_DATE}}</span>{{item.end_date}}</p>
+                                <p><span>{{COST}}</span>{{item.cost}}</p>
+                                <p><span>{{DESCRIBE}}</span>{{item.description}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                        <button id="btn_card_next_3" class="btn_card round">&#8250;</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <h2>{{title_project_define}}</h2>
+
+                    <div class="row cards_4">
+                        <button id="btn_card_back_4" class="btn_card round">&#8249;</button>
+                        {% for item in list_projects_def %}
+                        <div class="card" onclick="onClickCard({{item.id_proj}})" >
+                            <div class="img_card">
+                                <img  class="fit-img" src="{{item.img_addr}}">
+                            </div>
+                            <div class="entire-card">
+                                <p><span>{{NAME}}</span>{{item.name}}</p>
+                                <p><span>{{START_DATE}}</span>{{item.start_date}}</p>
+                                <p><span>{{COST}}</span>{{item.cost}}</p>
+                                <p><span>{{DESCRIBE}}</span>{{item.description}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                        <button id="btn_card_next_4" class="btn_card round">&#8250;</button>
+                    </div>
+                </div>
+            </section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base_loged_in.html' %}
+{% block content %}
+<section>
+    <div class="tab_bar">
+      <button id="f" class="tab_btn" onclick="openPage('lancer_view_page')">{{funder}}</button>
+      <button id="l" class="tab_btn" onclick="openPage('funder_view_page')">{{lancer}}</button>
+    </div>
+    <div id="lancer_view_page" class="view-page">
+        <form action="/api/v1/users/{{ID_USER}}/project-lancer" method="post" class="col proj-form" enctype="multipart/form-data">
+            <label for="name">{{label_name}}</label>
+            <input id="name" type="text" name="name" value="{{input_name}}" required="required">
+            <label for="description">{{label_description}}</label>
+            <input id="description" style="height:30rem;" type="text" name="description" value="{{input_description}}" required="required">
+            <label for="deadline">{{label_deadline}}</label>
+            <input id="deadline" type="datetime-local" name="end_date" value="{{input_deadline}}" required="required">
+            <div class="row">
+                <label for="file">{{label_file}}</label>
+                <input id="file" type="file" name="file" class="btn-prof" multiple>
+                <label for="img">{{label_img}}</label>
+                <input id="img" type="file" name="img" class="btn-prof" multiple>
+            </div>
+            <div class="row">
+                <label for="usd_cost">{{label_usd_cost}}</label>
+                <input id="usd_cost" type="text" name="usd_cost" value="{{input_usd_cost}}" placeholder="USD$">
+                <img class="img_ex_proj" src="/../static/image/exchange.svg" />
+                <input id="omb_cost" type="text" name="cost" value="{{input_omb_cost}}" placeholder="OMB" required="required">
+            </div>
+            <input  class="btn-proj" id="submit" type="submit" name="submit" value="submit">
+        </form>
+    </div>
+    <div id="funder_view_page" class="view-page" style="display:none">
+      <form action="/api/v1/users/{{ID_USER}}/project-search" method="post" class="col proj-form" enctype="multipart/form-data">
+          <div class="row" style="align-self:center;">
+              <input class="search-input" type="search" name="query" id="search" style="border-radius:0;width:60rem;" aria-label="Search through site content" value="" required="required">
+              <input  class="search-btn" id="submit_search" type="submit" name="submit-search" value="submit">
+          </div>
+      </form >
+        <div class="center-flex">
+            {% for item in list_p %}
+        <form action="/api/v1/users/{{ID_USER}}/project-accepted/{{item.id_proj}}" method="post" class="row project_items margin-items"  enctype="multipart/form-data">
+            <div class="row">
+                <img src="{{item.img_addr}}" class="project_items-img">
+            </div>
+            <div class="col max-width bg-items-proj">
+                <div class="row">
+                    <h3 class="padding-sub-items" style="font-weight:bold;font-size:2rem;">{{NAME}}{{item.name}}</h3>
+                </div>
+                <div class="row">
+                    <h4 class="padding-sub-items">{{DEAD_LINE}}{{item.end_date}}</h4>
+                </div>
+                <div class="row">
+                    <h4 class="padding-sub-items">{{COST}}{{item.cost}} OMB </h4>
+                </div>
+                <div class="row">
+                    <h6 class="padding-sub-items font-gray">{{item.description}} OMB </h6>
+                </div>
+                <div class="col to-left max-width max-height to-bottom">
+                    <input class="btn-proj btn-items-proj" type="submit" name="submit" value="accept">
+                </div>
+            </div>
+        </form>
+        {% endfor %}
+        </div>
+        <div class="pagination">
+          {% if page > 3 %}
+           <a href="/api/v1/users/{{ID_USER}}/project?page={{page-1}}">&laquo;</a>
+           {% endif %}
+           {% for i in range( page-(page%3),page+1 ) %}
+                <a class="a-page" href="/api/v1/users/{{ID_USER}}/project?page={{i+1}}">{{i}}</a>
+           {% endfor %}
+            {% if total > 13%}
+            <a>...{{total//3}}</a>
+            {% endif %}
+           {% if (page*4*3) < total  %}
+            <a href="/api/v1/users/{{ID_USER}}/project?page={{page+1}}">&raquo;</a>
+           {% endif %}
+        </div>
+    </div>
+
+</section>
+{% endblock %}

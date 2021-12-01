@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+passlib
+bcrypt
+python-jose
+python-multipart
+jinja2
+python-dotenv
+emails
+psycopg2
+celery
+aiofiles
+pycoingecko
+fastapi-pagination
+requests
+pydantic[email]
